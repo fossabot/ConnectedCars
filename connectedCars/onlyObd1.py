@@ -54,9 +54,6 @@ messageJson_array = []
 count = 0
 
 while True:
-        start_10=0
-        end_10=0
-
         # Query all commands in serial fashion
         # Note this can be changed to asynchronous format if required
         for i in supported_commands_list:
@@ -65,82 +62,22 @@ while True:
             start = timeit.timeit()
             c = obd.commands[i]
             response = connection.query(c)
-            #if not response.is_null():
-            #    print(i + ": " + str(response.value) + ' ***EOV \n\n')
             x ={}
-            '''
-            for i in response.messages:
-                
-                print('frames')
-                print(dir(i.frames))
-                print('hex')
-                print(dir(i.hex))
-                print('parsed')
-                print(dir(i.parsed))
-                print('raw')
-                print(dir(i.raw))
-                print('tx_id')
-                print(dir(i.tx_id))
-                #x.append([i.data, i.ecu, i.frames, i.hex, i.parsed, i.raw, i.tx_id])
-                x['data'] = i.data
-                x['ecu'] = i.ecu
-                x['frames'] = str(i.frames[:])
-                x['hex'] = i.hex.__str__
-                x['parsed'] = i.parsed.__str__
-                x['raw'] = i.raw.__str__
-                if i.tx_id is not None:
-                    x['tx_id'] = str(i.tx_id.real) + ' ' + str(i.tx_id.imag)
-            '''
-
-
+            
             python_object = {
                 'Device_ID':'RaspbereyPi_bf4e',
                 'time':str(response.time),
                 'Parameter':str(i),
                 'Command':str(response.command),
-                #'RawMessage':str(response.messages),
-                #'RawMessage':str(x),
                 'Value:':str(response.value)
                 }
             messageJson_array.append(python_object)
             count +=1
             print(str(count) + " of " + str(10*len(supported_commands_list)) + " messages held in buffer.")
             end = timeit.timeit()
-            #print(str(end - start) + " is time required for " + str(i))
-
-            #if count>=10*len(supported_commands_list) and end_10==0:
-            #    print("*"*80)
-            #    print("*"*80)
-            #    print("*"*80)
-            #    print("*"*80)
-            #    end_10=timeit.timeit()
-            #    print("Time for 10 set of records = " + str(end_10-start_10))
-            #    start_10=0
-            #    end_10=0
+            with open('/home/pi/aws_sdk/aws-iot-device-sdk-python/samples/basicPubSub/Certs/result.json', 'a+') as f:
+                for item in messageJson_array:
+                    f.write("%s\n" % item)
+                messageJson_array = []
+                count = 0
                 
-
-            # If number of messages collected becomes 100, we wirite them all to a file
-            #if count>=10*len(supported_commands_list):
-            if True:
-                with open('/home/pi/aws_sdk/aws-iot-device-sdk-python/samples/basicPubSub/Certs/result.json', 'a+') as f:
-                    #print("*"*80)
-                    #print("*"*80)
-                    #print("*"*80)
-                    #start_file = timeit.timeit()
-                    #print("Time between end of first write and beginning of next was " + str(start_file-end_file))
-                    #print(messageJson_array)
-                    for item in messageJson_array:
-                        f.write("%s\n" % item)
-                    end_file = timeit.timeit()
-                    print("Written to file")
-                    #print("Time to write " + str(count) + " record was " + str(end_file-start_file))
-                    messageJson_array = []
-                    count = 0
-                #print("*"*80)
-                #print("*"*80)
-                #print("*"*80)
-            #myAWSIoTMQTTClient.publish(topic, messageJson, 1)
-            #if args.mode == 'publish':
-            #    print('Published topic %s: %s\n' % (topic, messageJson))
-            #print('Published topic %s: %s\n' % (topic, messageJson))
-    #time.sleep(0.1)
