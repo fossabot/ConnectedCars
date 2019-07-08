@@ -19,13 +19,13 @@ print("OBD connection established.")
 
 #DEBUG INFO
 # the name of the currently connected port
-portName=obd.port_name()
+#portName=obd.port_name()
 # the ID of the protocol being used by the ELM327
-protocolId=obd.protocol_id()
+#protocolId=obd.protocol_id()
 #the name of the protocol being used by the ELM327
-protocolName=obd.protocol_name()
+#protocolName=obd.protocol_name()
 # OBD connection status 
-status=obd.status()
+#status=obd.status()
 
 
 
