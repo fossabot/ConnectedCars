@@ -27,6 +27,7 @@ def bytes_to_int(bytes):
 
 def vin(messages):
     """ decoder for RPM messages """
+    print("the msg is : "+ str(messages))
     d = messages[0].data # only operate on a single message
     d = d[2:] # chop off mode and PID bytes
     v = bytes_to_int(d) / 4.0  # helper function for converting byte arrays to ints
@@ -44,9 +45,18 @@ o.supported_commands.add(c)
 o.query(c)
 print('Data: ' + str(datetime.datetime.now()) + ' -- VIN NUMBER: '+str(o.query(c)))
 
+obdVals = {}
+obdVals['DEVICE_ID']='RaspbereyPi_bf4e'
+obdVals['TIME_ISO']=datetime.now().isoformat()
+obdVals['TIME']=time.time()
+print(obdVals)
+
 status=o.query(obd.commands["STATUS"]).value
 print(help(status))
 print(dir(status))
 print(status.ignition_type)
 print(status.DTC_count)
 print(status.MIL)
+vals=vars(status)
+obdVals.update(vals)
+print(obdVals)

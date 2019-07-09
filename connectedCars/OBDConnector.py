@@ -68,7 +68,13 @@ while True:
    obdVals['TIME']=time.time()
    for cmdNm in supported_commands_list:
       if 'STATUS' == cmdNm :
-         obdVals[cmdNm]=str(connection.query(obd.commands[cmdNm]).value.ignition_type)
+         status = connection.query(obd.commands[cmdNm]).value
+         if status is None:
+            obdVals[cmdNm]="None"
+         else :
+            obdVals[cmdNm]=str(status.ignition_type)
+            vals=vars(status)
+            obdVals.update(vals)
       else :
          obdVals[cmdNm]=str(connection.query(obd.commands[cmdNm]).value)   
 
