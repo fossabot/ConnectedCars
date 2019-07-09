@@ -61,13 +61,16 @@ print(supported_commands_list)
 connection.start()
 
 while True:
-   time.sleep(5)
+   time.sleep(1)
    obdVals = {}
    obdVals['DEVICE_ID']='RaspbereyPi_bf4e'
    obdVals['TIME_ISO']=datetime.now().isoformat()
    obdVals['TIME']=time.time()
    for cmdNm in supported_commands_list:
-      obdVals[cmdNm]=str(connection.query(obd.commands[cmdNm]).value)
+      if 'STATUS' == cmdNm :
+         obdVals[cmdNm]=str(connection.query(obd.commands[cmdNm]).value.ignition_type)
+      else :
+         obdVals[cmdNm]=str(connection.query(obd.commands[cmdNm]).value)   
 
    obdValsJson = json.dumps(obdVals)
    print(obdValsJson)
