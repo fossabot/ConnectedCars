@@ -1,9 +1,8 @@
 import logging
-import argparse
 import json
 import obd
 import time
-
+from datetime import datetime
 logger = logging.getLogger(__name__)
 # We enable all logging messages for initial development
 obd.logger.setLevel(obd.logging.DEBUG)
@@ -52,28 +51,29 @@ for command_list in obd.commands.modes:
            #print(cmd.name)
            if connection.supports(obd.commands[cmd.name]):
               supported_commands_list.append(cmd.name)
-
+              connection.watch(obd.commands[cmd.name])
 
 print(supported_commands_list)              
 
-obdVals = {}
-connection.watch(obd.commands["RPM"])
-connection.watch(obd.commands["FUEL_STATUS"])
+#obdVals = {}
+#connection.watch(obd.commands["RPM"])
+#connection.watch(obd.commands["FUEL_STATUS"])
 connection.start()
 
-for i in range(5):
+while True:
    time.sleep(5)
-   obdVals["RPM"]=connection.query(obd.commands["RPM"])
-   obdVals["FUEL_STATUS"]=connection.query(obd.commands["FUEL_STATUS"])
+   obdVals = {}
+   obdVals['DEVICE_ID']='RaspbereyPi_bf4e'
+   obdVals['TIME_ISO']=datetime.now().isoformat()
+   obdVals['TIME']=time.time()
+   for cmdNm in supported_commands_list:
+      obdVals[cmdNm]=str(connection.query(obd.commands[cmdNm]).value)
+
+   obdValsJson = json.dumps(obdVals)
+   print(obdValsJson)
+   with open('obdVals_'+time.strftime("%Y-%m-%d")+'.txt', 'a+') as obd_file:
+      obd_file.write(obdValsJson+ "\n")
+
 
 connection.stop()
 connection.unwatch_all()
-
-obdValsJson = json.dumps(obdVals)
-
-print(obdVals)
-
-print(obdValsJson)
-
-with open('obdVals.txt', 'w') as obd_file:
-  json.dump(obdVals, obd_file)
