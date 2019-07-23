@@ -73,8 +73,8 @@ while True:
             obdVals[cmdNm]="None"
          else :
             obdVals[cmdNm]=str(status.ignition_type)
-            vals=vars(status)
-            obdVals.update(vals)
+            #vals=vars(status)
+            #obdVals.update(vals)
       else :
          obdVals[cmdNm]=str(connection.query(obd.commands[cmdNm]).value)   
 
