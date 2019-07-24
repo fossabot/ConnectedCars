@@ -35,10 +35,10 @@ print("The protocol id is "+protocolId+" and protocol name is " + protocolName)
 #obd.print_commands()
 
 # wait for the connection to be established and car ignition to be turned on
-while not connection.status() == obd.OBDStatus.CAR_CONNECTED:
-    print("Waiting for ignition to start. Check will be performed again in 1 second")
-    print(connection.status())
-    time.sleep(2)
+# while not connection.status() == obd.OBDStatus.CAR_CONNECTED:
+#     print("Waiting for ignition to start. Check will be performed again in 1 second")
+#     print(connection.status())
+#     time.sleep(2)
 
 # First we check and create a list of supported sub set of commands for  the connected vehicle
 supported_commands_list = []
