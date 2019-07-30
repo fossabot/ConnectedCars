@@ -94,9 +94,10 @@ while True:
 
    obdValsJson = json.dumps(obdVals)
    print(obdValsJson)
-   schemaTemplate.format(schemaTemp=schemaElement,payload=obdValsJson)
+   sensorData=schemaTemplate.format(schemaTemp=schemaElement,payload=obdValsJson)
+   print(sensorData)
    with open('obdVals_'+time.strftime("%Y-%m-%d")+'.txt', 'a+') as obd_file:
-      obd_file.write(schemaTemplate+ "\n")
+      obd_file.write(sensorData+ "\n")
 
 
 connection.stop()
