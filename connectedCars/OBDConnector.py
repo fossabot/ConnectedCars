@@ -34,7 +34,7 @@ paramTemplate = """{{ "type": "string", "optional": true, "field": "{source}" }}
 schemaTemplate="""{{ "schema":  "type": "struct",
                         "optional": false,
                         "name": "foobar",
-                        "fields": {{ [{schemat}] }}
+                        "fields": {{ [{schemaTemp}] }}
                        ,
             "payload": {payload}
 }}"""
@@ -94,7 +94,7 @@ while True:
 
    obdValsJson = json.dumps(obdVals)
    print(obdValsJson)
-   schemaTemplate.format(schemat=schemaElement,payload=obdValsJson)
+   schemaTemplate.format(schemaTemp=schemaElement,payload=obdValsJson)
    with open('obdVals_'+time.strftime("%Y-%m-%d")+'.txt', 'a+') as obd_file:
       obd_file.write(schemaTemplate+ "\n")
 
