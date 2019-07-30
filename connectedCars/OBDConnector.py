@@ -29,6 +29,20 @@ status=connection.status()
 print("The connector is connected to "+portName+" with a status "+status)
 print("The protocol id is "+protocolId+" and protocol name is " + protocolName)
 
+paramTemplate = """{{ "type": "string", "optional": true, "field": "{source}" }}"""
+
+schemaTemplate="""{{ "schema":  "type": "struct",
+                        "optional": false,
+                        "name": "foobar",
+                        "fields": {{ [{schemat}] }}
+                       ,
+            "payload": {payload}
+}}"""
+
+schemaLst=[]
+schemaLst.append(paramTemplate.format(source="DEVICE_ID"))
+schemaLst.append(paramTemplate.format(source="TIME_ISO"))
+schemaLst.append(paramTemplate.format(source="TIME"))
 
 #Prints all commands supported by the car. 
 #For working in interactive mode.
@@ -52,12 +66,12 @@ for command_list in obd.commands.modes:
            if connection.supports(obd.commands[cmd.name]):
               supported_commands_list.append(cmd.name)
               connection.watch(obd.commands[cmd.name])
+              schemaLst.append(paramTemplate.format(source=cmd.name))
 
-print(supported_commands_list)              
+print(supported_commands_list)   
+#Generate the schema           
+schemaElement=",".join(schemaLst)
 
-#obdVals = {}
-#connection.watch(obd.commands["RPM"])
-#connection.watch(obd.commands["FUEL_STATUS"])
 connection.start()
 
 while True:
@@ -80,8 +94,9 @@ while True:
 
    obdValsJson = json.dumps(obdVals)
    print(obdValsJson)
+   schemaTemplate.format(schemat=schemaElement,payload=obdValsJson)
    with open('obdVals_'+time.strftime("%Y-%m-%d")+'.txt', 'a+') as obd_file:
-      obd_file.write(obdValsJson+ "\n")
+      obd_file.write(schemaTemplate+ "\n")
 
 
 connection.stop()
