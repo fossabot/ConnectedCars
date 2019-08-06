@@ -31,13 +31,12 @@ print("The protocol id is "+protocolId+" and protocol name is " + protocolName)
 
 paramTemplate = """{{ "type": "string", "optional": true, "field": "{source}" }}"""
 
-schemaTemplate="""{{ "schema":  "type": "struct",
-                        "optional": false,
-                        "name": "foobar",
-                        "fields": {{ [{schemaTemp}] }}
-                       ,
-            "payload": {payload}
-}}"""
+schemaTemplate="""{{ "schema": {{ "type": "struct",
+                                  "optional": false,
+                                  "name": "connectedCars",
+                                  "fields":  [{schemaTemp}] }} ,
+                     "payload": {payload}
+                  }}"""
 
 schemaLst=[]
 schemaLst.append(paramTemplate.format(source="DEVICE_ID"))
